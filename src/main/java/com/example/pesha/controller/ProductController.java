@@ -19,27 +19,27 @@ public class ProductController {
     }
 
     @GetMapping
-    public Product getProduct(@RequestParam(value = "productName") String productName){
+    public Product getProduct(@RequestParam(value = "productName") String productName) {
         return productService.getProduct(productName);
     }
 
     @GetMapping("/all")
-    public List<Product> getAllProduct(){
+    public List<Product> getAllProduct() {
         return productService.getAllProduct();
     }
 
     @PostMapping
-    public Product creatProduct(@RequestBody Product productRequest){
+    public Product creatProduct(@RequestBody Product productRequest) {
         return productService.createProduct(productRequest);
     }
 
     @PutMapping
-    public Product replaceProduct(@RequestParam(value = "replaceProductName")String ReplaceProductName, @RequestBody Product productRequest){
-        return productService.replaceProduct(ReplaceProductName,productRequest);
+    public Product replaceProduct(@RequestParam(value = "replaceProductName") String ReplaceProductName, @RequestBody Product productRequest) {
+        return productService.replaceProduct(ReplaceProductName, productRequest);
     }
 
     @DeleteMapping
-    public void deleteProduct(@RequestParam(value = "productName") String productName){
+    public void deleteProduct(@RequestParam(value = "productName") String productName) {
         productService.deleteProduct(productName);
     }
 

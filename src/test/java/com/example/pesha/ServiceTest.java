@@ -10,7 +10,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.test.annotation.Commit;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import static org.mockito.ArgumentMatchers.any;
@@ -28,11 +27,11 @@ public class ServiceTest {
 
     @Test
     @Transactional
-    public void getProductPrice(){
-        Product productSaved = new Product("D01",100);
+    public void getProductPrice() {
+        Product productSaved = new Product("D01", 100);
         when(productRepository.save(any(Product.class))).thenReturn(productSaved);
 
-        Product productRequest = new Product("D01",100);
+        Product productRequest = new Product("D01", 100);
         Product product = productService.createProduct(productRequest);
         System.out.println(product.getProductPrice());
     }
