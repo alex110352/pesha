@@ -19,6 +19,8 @@ public class User {
     private Long id;
     private String userName;
     private String userPassword;
+    @OneToMany(cascade = CascadeType.ALL)
+    private List<Cart> carts;
 
     @ManyToMany(cascade = CascadeType.ALL)
     private List<Authority> authorities;

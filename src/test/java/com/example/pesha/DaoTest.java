@@ -1,9 +1,11 @@
 package com.example.pesha;
 
 import com.example.pesha.dao.entity.Authority;
+import com.example.pesha.dao.entity.Cart;
 import com.example.pesha.dao.entity.Product;
 import com.example.pesha.dao.entity.User;
 import com.example.pesha.dao.repositories.AuthorityRepository;
+import com.example.pesha.dao.repositories.CartRepository;
 import com.example.pesha.dao.repositories.ProductRepository;
 import com.example.pesha.dao.repositories.UserRepository;
 import jakarta.transaction.Transactional;
@@ -16,7 +18,9 @@ import org.springframework.test.annotation.Commit;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @DataJpaTest
@@ -28,6 +32,9 @@ public class DaoTest {
 
     @Autowired
     UserRepository userRepository;
+
+    @Autowired
+    CartRepository cartRepository;
 
     @Autowired
     AuthorityRepository authorityRepository;
@@ -87,6 +94,47 @@ public class DaoTest {
         replaceUser.setAuthorities(replaceAuthorities);
 
         userRepository.save(replaceUser);
+
+    }
+
+    @Test
+    @Commit
+    @Transactional
+    public void createCart() {
+
+        List<Authority> authorities = new ArrayList<>();
+        authorities.add(new Authority("admin"));
+        authorities.add(new Authority("normal"));
+
+        User user = new User();
+        user.setUserName("tony");
+        user.setUserPassword("1234");
+        user.setAuthorities(authorities);
+
+        userRepository.save(user);
+
+        Product product1 = new Product("貓", 100);
+        Product product2 = new Product("狗", 200);
+
+
+        List<Product> productList = new ArrayList<>();
+        productList.add(product1);
+        productList.add(product2);
+
+        Map<Product, Integer> productQuantity = new HashMap<>();
+        productQuantity.put(product1, 3);
+        productQuantity.put(product2, 5);
+
+
+        Cart cart = new Cart();
+        cart.setProducts(productList);
+        cart.setUser(user);
+        cart.setProductQuantity(productQuantity);
+        cart.calculatePrices();
+        cartRepository.save(cart);
+        System.out.println(cart.getProductQuantity());
+        System.out.println(cart.getItemPrices());
+        System.out.println(cart.getTotalPrice());
 
     }
 
