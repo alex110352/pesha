@@ -69,7 +69,7 @@ public class ProductControllerTest {
     @Test
     public void testGetAPI() throws Exception {
 
-        when(this.productService.getProduct("C01")).thenReturn(new Product("C01", 100));
+        when(this.productService.getProduct(1L)).thenReturn(new Product("C01", 100));
 
 
         productMockMvc.perform(MockMvcRequestBuilders

@@ -20,9 +20,9 @@ public class ProductService {
         this.productRepository = productRepository;
     }
 
-    public Product getProduct(String productName) {
-        Optional<Product> product = productRepository.findByProductName(productName);
-        return product.orElseThrow(() -> new NotFoundException("can't find " + productName));
+    public Product getProduct(Long productId) {
+        Optional<Product> product = productRepository.findById(productId);
+        return product.orElseThrow(() -> new NotFoundException("can't find " + productId));
     }
 
     public List<Product> getAllProduct() {
@@ -66,9 +66,9 @@ public class ProductService {
         return productRepository.save(replaceProduct);
     }
 
-    public void deleteProduct(String productName) {
-        Product product = productRepository.findByProductName(productName)
-                .orElseThrow(() -> new NotFoundException("can't find " + productName));
+    public void deleteProduct(Long productId) {
+        Product product = productRepository.findById(productId)
+                .orElseThrow(() -> new NotFoundException("can't find " + productId));
         productRepository.delete(product);
     }
 

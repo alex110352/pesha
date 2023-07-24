@@ -1,10 +1,10 @@
 package com.example.pesha.dao.entity;
 
-import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.hibernate.annotations.Columns;
+
+import javax.persistence.*;
 
 @Entity
 @Table(name = "authority")

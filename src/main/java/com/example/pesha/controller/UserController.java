@@ -3,9 +3,11 @@ package com.example.pesha.controller;
 import com.example.pesha.dao.entity.User;
 import com.example.pesha.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+
 
 @RestController
 @RequestMapping(value = "user")
@@ -18,12 +20,12 @@ public class UserController {
         this.userService = userService;
     }
 
-    @GetMapping
-    public User getUser(@RequestParam(value = "userName") String userName) {
-        return userService.getUser(userName);
+    @GetMapping("/{userId}")
+    public User getUser(@PathVariable("userId") Long userId) {
+        return userService.getUser(userId);
     }
 
-    @GetMapping("/all")
+    @GetMapping("/admin/all")
     public List<User> getAllUser() {
         return userService.getAllUser();
     }
@@ -34,15 +36,14 @@ public class UserController {
     }
 
     @PutMapping
-    public User replaceUser(@RequestParam(value = "userName") String userName,
-                            @RequestParam(value = "userPassword") String userPassword,
+    public User replaceUser(@RequestParam("userId") Long userId,
                             @RequestBody User requestUser) {
-        return userService.replaceUser(userName, userPassword, requestUser);
+        return userService.replaceUser(userId, requestUser);
     }
 
     @DeleteMapping
-    public void deleteUser(@RequestParam(value = "userName") String userName) {
-        userService.deleteUser(userName);
+    public void deleteUser(@RequestParam("userId") Long userId) {
+        userService.deleteUser(userId);
     }
 
 }

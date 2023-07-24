@@ -35,9 +35,9 @@ public class OrderService {
         return order;
     }
 
-    public List<OrderEntity> getOrderByUser(String userName) {
+    public List<OrderEntity> getOrderByUser(Long userId) {
 
-        User user = userRepository.findByUserName(userName)
+        User user = userRepository.findById(userId)
                 .orElseThrow(() -> new NotFoundException("can't find user"));
 
         return orderRepository.findAllByUser(user)
@@ -48,5 +48,13 @@ public class OrderService {
         OrderEntity order = orderRepository.findById(orderId)
                 .orElseThrow(() -> new NotFoundException("can't find order"));
         orderRepository.delete(order);
+    }
+
+    public List<OrderEntity> getAllOrder() {
+        List<OrderEntity> orderList = orderRepository.findAll();
+        if (orderList.isEmpty()) {
+            throw  new NotFoundException("can't find order");
+        }
+        return orderList;
     }
 }

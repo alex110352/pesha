@@ -3,7 +3,6 @@ package com.example.pesha;
 import com.example.pesha.dao.entity.Product;
 import com.example.pesha.dao.repositories.ProductRepository;
 import com.example.pesha.service.ProductService;
-import jakarta.transaction.Transactional;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,7 +25,6 @@ public class ServiceTest {
     ProductRepository productRepository;
 
     @Test
-    @Transactional
     public void getProductPrice() {
         Product productSaved = new Product("D01", 100);
         when(productRepository.save(any(Product.class))).thenReturn(productSaved);

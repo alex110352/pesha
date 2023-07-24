@@ -1,10 +1,11 @@
 package com.example.pesha.dao.entity;
 
-import jakarta.persistence.*;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import javax.persistence.*;
 import java.util.List;
 
 @Entity
@@ -19,11 +20,14 @@ public class User {
     private Long id;
     private String userName;
     private String userPassword;
-    @OneToMany(cascade = CascadeType.ALL)
-    private List<Cart> carts;
+    @OneToOne(mappedBy = "user",cascade = CascadeType.ALL,orphanRemoval = true)
+    private Cart cart;
 
-    @ManyToMany(cascade = CascadeType.ALL)
+    @ManyToMany(fetch = FetchType.EAGER)
     private List<Authority> authorities;
+
+    @OneToMany(mappedBy = "user",cascade = CascadeType.REMOVE,orphanRemoval = true)
+    private List<OrderEntity> orderEntityList;
 
     public User(String userName, String userPassword, List<Authority> authorities) {
         this.userName = userName;

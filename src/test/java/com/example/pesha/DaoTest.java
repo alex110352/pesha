@@ -1,22 +1,18 @@
 package com.example.pesha;
 
-import com.example.pesha.dao.entity.Authority;
-import com.example.pesha.dao.entity.Cart;
-import com.example.pesha.dao.entity.Product;
-import com.example.pesha.dao.entity.User;
-import com.example.pesha.dao.repositories.AuthorityRepository;
-import com.example.pesha.dao.repositories.CartRepository;
-import com.example.pesha.dao.repositories.ProductRepository;
-import com.example.pesha.dao.repositories.UserRepository;
-import jakarta.transaction.Transactional;
+import com.example.pesha.dao.entity.*;
+import com.example.pesha.dao.repositories.*;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.test.annotation.Commit;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
+import javax.transaction.Transactional;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -29,15 +25,18 @@ public class DaoTest {
 
     @Autowired
     ProductRepository productRepository;
+    @Autowired
+    AuthorityRepository authorityRepository;
 
     @Autowired
     UserRepository userRepository;
 
     @Autowired
-    CartRepository cartRepository;
+    OrderRepository orderRepository;
 
     @Autowired
-    AuthorityRepository authorityRepository;
+    CartRepository cartRepository;
+
 
     @Test
     @Commit
@@ -100,21 +99,27 @@ public class DaoTest {
     @Test
     @Commit
     @Transactional
-    public void createCart() {
+    public void createOrder() {
 
         List<Authority> authorities = new ArrayList<>();
         authorities.add(new Authority("admin"));
         authorities.add(new Authority("normal"));
+        authorities.add(new Authority("ROLE_manager"));
+        authorityRepository.saveAll(authorities);
+
+        PasswordEncoder pe = new BCryptPasswordEncoder();
 
         User user = new User();
         user.setUserName("tony");
-        user.setUserPassword("1234");
+        user.setUserPassword(pe.encode("1234"));
         user.setAuthorities(authorities);
 
         userRepository.save(user);
 
         Product product1 = new Product("貓", 100);
         Product product2 = new Product("狗", 200);
+        productRepository.save(product1);
+        productRepository.save(product2);
 
 
         List<Product> productList = new ArrayList<>();
@@ -132,9 +137,58 @@ public class DaoTest {
         cart.setProductQuantity(productQuantity);
         cart.calculatePrices();
         cartRepository.save(cart);
-        System.out.println(cart.getProductQuantity());
-        System.out.println(cart.getItemPrices());
-        System.out.println(cart.getTotalPrice());
+
+        int discount = 100;
+
+        double totalPrice = cart.getTotalPrice();
+        double finalPrice = totalPrice - discount;
+
+        OrderEntity order = new OrderEntity();
+
+        order.setUser(cart.getUser());
+        order.setShippingAddress("abc-def");
+        order.setDiscount(discount);
+        order.setTotalPrice(totalPrice);
+        order.setFinalPrice(finalPrice);
+        orderRepository.save(order);
+
+        List<OrderItem> orderItems = new ArrayList<>();
+        Map<Product, Integer> productQuantitytest = cart.getProductQuantity();
+
+        for (Product product : cart.getProducts()) {
+            int quantity = productQuantitytest.getOrDefault(product, 0);
+            int price = product.getProductPrice();
+
+            OrderItem orderItem = new OrderItem();
+            orderItem.setProduct(product);
+            orderItem.setQuantity(quantity);
+            orderItem.setPrice(price);
+            orderItem.setOrder(order);
+            orderItems.add(orderItem);
+        }
+
+        order.setOrderItems(orderItems);
+        orderRepository.save(order);
+
+    }
+
+    @Test
+    @Commit
+    @Transactional
+    public void testtt() {
+
+        List<Authority> authorities = new ArrayList<>();
+        authorities.add(new Authority("admin"));
+        authorities.add(new Authority("normal"));
+        authorities.add(new Authority("ROLE_manager"));
+        PasswordEncoder pe = new BCryptPasswordEncoder();
+
+        User user = new User();
+        user.setUserName("tony");
+        user.setUserPassword(pe.encode("1234"));
+        user.setAuthorities(authorities);
+        System.out.println(user.getUserPassword());
+        userRepository.save(user);
 
     }
 

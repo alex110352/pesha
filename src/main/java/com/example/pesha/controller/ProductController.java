@@ -18,9 +18,9 @@ public class ProductController {
         this.productService = productService;
     }
 
-    @GetMapping
-    public Product getProduct(@RequestParam(value = "productName") String productName) {
-        return productService.getProduct(productName);
+    @GetMapping("/{productId}")
+    public Product getProduct(@PathVariable("productId") Long productId) {
+        return productService.getProduct(productId);
     }
 
     @GetMapping("/all")
@@ -39,8 +39,8 @@ public class ProductController {
     }
 
     @DeleteMapping
-    public void deleteProduct(@RequestParam(value = "productName") String productName) {
-        productService.deleteProduct(productName);
+    public void deleteProduct(@RequestParam(value = "productId") Long productId) {
+        productService.deleteProduct(productId);
     }
 
 }

@@ -1,7 +1,6 @@
 package com.example.pesha.controller;
 
 import com.example.pesha.dao.entity.OrderEntity;
-import com.example.pesha.dao.entity.User;
 import com.example.pesha.service.OrderService;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -25,13 +24,18 @@ public class OrderController {
         return orderService.getOrder(orderId);
     }
 
-    @GetMapping("/{userName}")
-    public List<OrderEntity> getOrderByUser(@PathVariable("userName")String userName){
-        return orderService.getOrderByUser(userName);
+    @GetMapping("/user/{userId}")
+    public List<OrderEntity> getOrderByUser(@PathVariable("userId")Long userId){
+        return orderService.getOrderByUser(userId);
     }
 
-    @DeleteMapping("/{orderId}")
-    public void deleteOrder(@PathVariable("orderId")Long orderId){
+    @GetMapping("/admin/all")
+    public List<OrderEntity> getAllOrder(){
+        return orderService.getAllOrder();
+    }
+
+    @DeleteMapping
+    public void deleteOrder(@RequestParam("orderId")Long orderId){
         orderService.deleteOrder(orderId);
     }
 }

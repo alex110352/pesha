@@ -46,33 +46,21 @@ public class CartService {
 
     }
 
-    public List<Cart> getAllCartByUser(String userName) {
-        User user = userRepository.findByUserName(userName)
+
+    public Cart getCartByUser(Long userId) {
+        User user = userRepository.findById(userId)
                 .orElseThrow(() -> new NotFoundException("not found user"));
+
         return cartRepository.findByUser(user);
     }
 
-    public Cart getCartByUser(String userName, int cartNumber) {
-        User user = userRepository.findByUserName(userName)
-                .orElseThrow(() -> new NotFoundException("not found user"));
-        List<Cart> cartList = cartRepository.findByUser(user);
-        if (cartNumber < 0 || cartNumber >= cartList.size()) {
-            throw new IndexOutOfBoundsException("Invalid cart number");
-        }
-        return cartList.get(cartNumber);
-    }
+    public Cart replaceCart(CartRequestDTO cartRequestDTO) {
 
-    public Cart replaceCart(String userName, int cartNumber, CartRequestDTO cartRequestDTO) {
-
-        User user = userRepository.findByUserName(userName)
+        User user = userRepository.findById(cartRequestDTO.getUserId())
                 .orElseThrow(() -> new NotFoundException("not found user"));
 
-        List<Cart> cartList = cartRepository.findByUser(user);
-        if (cartNumber < 0 || cartNumber >= cartList.size()) {
-            throw new IndexOutOfBoundsException("Invalid cart number");
-        }
+        Cart cart = cartRepository.findByUser(user);
 
-        Cart cart = cartList.get(cartNumber);
         List<Product> productList = productRepository.findAllById(cartRequestDTO.getProductIds());
         cart.setProducts(productList);
         cart.setProductQuantity(cartRequestDTO.getProductQuantity());
@@ -80,17 +68,12 @@ public class CartService {
         return cartRepository.save(cart);
     }
 
-    public void deleteCartByUser(String userName, int cartNumber) {
+    public void deleteCartByUser(Long userId) {
 
-        User user = userRepository.findByUserName(userName)
+        User user = userRepository.findById(userId)
                 .orElseThrow(() -> new NotFoundException("not found user"));
 
-        List<Cart> cartList = cartRepository.findByUser(user);
-        if (cartNumber < 0 || cartNumber >= cartList.size()) {
-            throw new IndexOutOfBoundsException("Invalid cart number");
-        }
-
-        Cart cart = cartList.get(cartNumber);
+        Cart cart = cartRepository.findByUser(user);
         cartRepository.delete(cart);
 
     }

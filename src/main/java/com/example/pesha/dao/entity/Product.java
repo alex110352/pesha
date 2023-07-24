@@ -1,10 +1,11 @@
 package com.example.pesha.dao.entity;
 
-import jakarta.persistence.*;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import javax.persistence.*;
 import java.util.List;
 
 @Entity
@@ -20,6 +21,7 @@ public class Product {
     private String productName;
     private int productPrice;
     @ManyToMany(mappedBy = "products")
+    @JsonIgnore
     private List<Cart> carts;
 
 

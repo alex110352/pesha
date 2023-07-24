@@ -19,14 +19,10 @@ public class CartController {
         this.cartService = cartService;
     }
 
-    @GetMapping
-    public List<Cart> getAllCartByUser(@RequestParam("userName") String userName) {
-        return cartService.getAllCartByUser(userName);
-    }
 
-    @GetMapping
-    public Cart getCartByUser(@RequestParam("userName") String userName, @RequestParam("cartNumber") int cartNumber) {
-        return cartService.getCartByUser(userName, cartNumber);
+    @GetMapping("/{userId}")
+    public Cart getCartByUser(@PathVariable("userId") Long userId) {
+        return cartService.getCartByUser(userId);
     }
 
     @PostMapping
@@ -35,14 +31,13 @@ public class CartController {
     }
 
     @PutMapping
-    public Cart replaceCart(@RequestParam("userName") String userName, @RequestParam("cartNumber") int cartNumber,
-                            @RequestBody CartRequestDTO cartRequestDTO) {
-        return cartService.replaceCart(userName, cartNumber, cartRequestDTO);
+    public Cart replaceCart(@RequestBody CartRequestDTO cartRequestDTO) {
+        return cartService.replaceCart(cartRequestDTO);
     }
 
     @DeleteMapping
-    public void deleteCartByUser(@RequestParam("userName") String userName, @RequestParam("cartNumber") int cartNumber){
-        cartService.deleteCartByUser(userName,cartNumber);
+    public void deleteCartByUser(@RequestParam("userId") Long userId){
+        cartService.deleteCartByUser(userId);
     }
 
 }

@@ -27,8 +27,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.setup.MockMvcBuilders.standaloneSetup;
@@ -134,12 +133,9 @@ public class CartControllerTest {
         cart.setProductQuantity(productQuantity);
         cart.calculatePrices();
 
-        List<Cart> cartList = new ArrayList<>();
-        cartList.add(cart);
 
-
-        when(this.cartService.getAllCartByUser(anyString()))
-                .thenReturn(cartList);
+        when(this.cartService.getCartByUser(anyLong()))
+                .thenReturn(cart);
 
         cartMockMvc.perform(MockMvcRequestBuilders
                         .get("/cart")

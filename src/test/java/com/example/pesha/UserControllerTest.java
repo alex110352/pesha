@@ -21,8 +21,7 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.setup.MockMvcBuilders.standaloneSetup;
@@ -84,7 +83,7 @@ public class UserControllerTest {
         authorities.add(new Authority("admin"));
         authorities.add(new Authority("normal"));
 
-        when(this.userService.getUser(anyString()))
+        when(this.userService.getUser(anyLong()))
                 .thenReturn(new User("tony", "1234", authorities));
 
 
@@ -108,7 +107,7 @@ public class UserControllerTest {
         authorities.add(new Authority("admin"));
         authorities.add(new Authority("employee"));
 
-        when(this.userService.replaceUser(anyString(), anyString(), any(User.class)))
+        when(this.userService.replaceUser(anyLong(), any(User.class)))
                 .thenReturn(new User("hsuan", "5678", authorities));
 
         JSONArray jsonAuthorities = new JSONArray();
