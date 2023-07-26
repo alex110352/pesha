@@ -1,16 +1,15 @@
 package com.example.pesha.dao.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import javax.persistence.*;
 import java.util.List;
 
 @Entity
 @Table(name = "product")
-@Data
+@Getter
+@Setter
 @AllArgsConstructor
 @NoArgsConstructor
 public class Product {
@@ -24,17 +23,12 @@ public class Product {
     @JsonIgnore
     private List<Cart> carts;
 
+    @OneToOne(mappedBy = "product")
+    private OrderItem orderItem;
+
 
     public Product(String productName, int productPrice) {
         this.productName = productName;
         this.productPrice = productPrice;
-    }
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
     }
 }

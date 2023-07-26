@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>結帳</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f5f5f5;
+            margin: 0;
+        }
+
+        .container {
+            display: flex;
+            justify-content: space-between;
+            padding: 20px;
+            background-color: #fff;
+            box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+            border-radius: 5px;
+            margin: 20px auto;
+            max-width: 800px;
+        }
+
+        h1 {
+            text-align: center;
+            color: #28a745;
+            margin-top: 0;
+        }
+
+        .section {
+            flex: 1;
+            margin-right: 20px;
+        }
+
+        h2 {
+            margin-top: 0;
+            color: #333;
+            border-bottom: 1px solid #ddd;
+            padding-bottom: 5px;
+            margin-bottom: 10px;
+        }
+
+        .form-group {
+            margin-bottom: 10px;
+        }
+
+        .submit-button {
+            margin-top: 20px;
+            padding: 10px 20px;
+            background-color: #28a745;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: background-color 0.3s;
+        }
+
+        .submit-button:hover {
+            background-color: #218838;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 10px;
+        }
+
+        th, td {
+            padding: 8px;
+            border-bottom: 1px solid #ddd;
+        }
+
+        th {
+            text-align: left;
+        }
+
+        .subtotal, .total {
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body th:object="${cart}">
+<h1>結帳</h1>
+<div class="container">
+    <div class="section">
+        <h2>付款方式</h2>
+        <div class="form-group">
+            <label for="paymentMethod">選擇付款方式：</label>
+            <select id="paymentMethod">
+                <option value="cash">現金</option>
+                <!-- 你可以在這裡添加其他付款方式選項 -->
+            </select>
+        </div>
+
+        <h2>運送地址</h2>
+        <div class="form-group">
+            <label for="shippingAddress">輸入運送地址：</label>
+            <input type="text" placeholder="請輸入運送地址" id="shippingAddress">
+        </div>
+
+        <h2>折扣碼</h2>
+        <div class="form-group">
+            <label for="discountCode">輸入折扣碼：</label>
+            <input type="text" placeholder="請輸入折扣碼" id="discountCode" oninput="updateDiscount()">
+        </div>
+
+        <button class="submit-button" onclick="submitOrder()">送出訂單</button>
+    </div>
+
+    <div class="section">
+        <h2>購物車內的商品：</h2>
+        <table>
+            <thead>
+            <tr>
+                <th>商品名稱</th>
+                <th>價格</th>
+                <th>數量</th>
+            </tr>
+            </thead>
+            <tbody>
+            <!-- 使用迴圈來遍歷所有購物車商品及其相關資訊 -->
+            <tr th:each="product : ${cart.products}">
+                <td th:text="${product.productName}"></td>
+                <td th:text="${'$' + product.productPrice}"></td>
+                <td th:text="${cart.productQuantity[__${product.id}__]}"></td>
+            </tr>
+            </tbody>
+        </table>
+
+        <div class="subtotal">
+            <label>小計：</label>
+            <span th:text="${'$' + cart.totalPrice}"></span>
+        </div>
+
+        <div>
+            <label>折扣：</label>
+            <span id="discountAmount">¥ 0.00</span>
+            <!-- 這裡可以動態顯示折扣金額 -->
+        </div>
+
+        <div class="total">
+            <label>總計：</label>
+            <span id="finalPrice">$0.00</span>
+        </div>
+    </div>
+</div>
+
+<script th:inline="javascript">
+
+    var userName = /*[[${#strings.escapeJavaScript(#authentication.principal.username)}]]*/ null;
+    var cart = /*[[${cart}]]*/ null;
+
+    var totalPrice = cart.totalPrice;
+    var discountAmount = 0;
+
+    // 在一開始計算並設定 finalPrice
+    var discountCode = document.getElementById('discountCode').value;
+    // 在這裡根據折扣碼計算折扣金額（這裡使用了一個簡單的假設）
+    if (discountCode === 'DISCOUNT10') {
+        discountAmount = cart.totalPrice * 0.1;
+    } else {
+        discountAmount = 0;
+    }
+
+    var finalPrice = totalPrice - discountAmount;
+
+    function submitOrder() {
+        var shippingAddress = document.getElementById('shippingAddress').value;
+        var paymentMethod = document.getElementById('paymentMethod').value;
+
+        // 創建JSON對象
+        var orderRequestDTO = {
+            userName: userName,
+            shippingAddress: shippingAddress,
+            paymentMethod: paymentMethod,
+            discount: discountAmount,
+            totalPrice: totalPrice
+        };
+
+        if (!shippingAddress) {
+            alert('請輸入運送地址！');
+            return; // 阻止請求的發送
+        }
+
+        // 使用AJAX fetch發送POST請求
+        fetch('/checkout', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(orderRequestDTO)
+        }).then(response => {
+            if (response.ok) {
+                // 請求成功，進行相應的處理
+                alert('感謝您的訂單，我們將盡快處理！');
+                window.location.href = '/order'; // 導向/order頁面
+            } else {
+                alert('感謝您的訂單，我們將盡快處理！');
+                window.location.href = '/order/' + userName;
+            }
+        }).catch(error => {
+            // 請求錯誤，處理錯誤
+            alert('訂單提交發生錯誤！');
+        });
+    }
+
+    function roundToWholeNumber(value) {
+        return Math.round(value);
+    }
+
+    function updateDiscount() {
+        var discountCode = document.getElementById('discountCode').value;
+
+        // 在這裡根據折扣碼計算折扣金額（這裡使用了一個簡單的假設）
+        if (discountCode === 'DISCOUNT10') {
+            discountAmount = cart.totalPrice * 0.1;
+        } else {
+            discountAmount = 0;
+        }
+
+        // 更新右側顯示的折扣金額
+        var discountElement = document.getElementById('discountAmount');
+        discountElement.innerText = '$' + roundToWholeNumber(discountAmount);
+        discountAmount = roundToWholeNumber(discountAmount);
+        finalPrice = totalPrice - discountAmount;
+
+        // 更新顯示的最終價格
+        var finalPriceElement = document.getElementById('finalPrice');
+        finalPriceElement.innerText = '$' + finalPrice;
+    }
+
+    // 載入時顯示初始總計
+    document.addEventListener('DOMContentLoaded', function () {
+        var discountElement = document.getElementById('discountAmount');
+        discountElement.innerText = '$' + roundToWholeNumber(discountAmount);
+
+        var finalPriceElement = document.getElementById('finalPrice');
+        finalPriceElement.innerText = '$' + finalPrice;
+    });
+
+</script>
+</body>
+</html>

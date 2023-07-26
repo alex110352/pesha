@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity5">
+<head>
+    <title>購物車</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+        }
+
+        h1 {
+            margin-bottom: 20px;
+            color: #333;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        th, td {
+            padding: 10px;
+            text-align: left;
+            border-bottom: 1px solid #ccc;
+        }
+
+        th {
+            background-color: #f2f2f2;
+        }
+
+        tbody tr:hover {
+            background-color: #f9f9f9;
+        }
+
+        .total-price {
+            font-weight: bold;
+            color: #007bff;
+        }
+
+        .quantity-input {
+            width: 50px;
+        }
+
+        .action-buttons {
+            display: flex;
+            align-items: center;
+        }
+
+        .action-buttons button {
+            margin-right: 5px;
+            padding: 5px 10px;
+            background-color: #007bff;
+            color: #fff;
+            border: none;
+            cursor: pointer;
+        }
+
+        .action-buttons button.delete {
+            background-color: #dc3545;
+        }
+
+        button.submit-button {
+            padding: 10px 20px;
+            background-color: #28a745;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: background-color 0.3s;
+        }
+
+        button.submit-button:hover {
+            background-color: #218838;
+        }
+
+
+
+
+    </style>
+</head>
+<body>
+<script th:inline="javascript">
+            var userName = /*[[${#strings.escapeJavaScript(#authentication.principal.username)}]]*/ null;
+
+            function updateQuantity(productId) {
+
+                var button = event.target;
+                var row = button.closest('tr');
+                var inputElement = row.querySelector('.quantity-input');
+                var quantity = parseInt(inputElement.value);
+
+                if (quantity < 1 || quantity > 10) {
+                    alert('數量必須在1到10之間！');
+                    location.reload();
+                    return; // 阻止請求的發送
+                }
+
+                var addToCartRequestDTO = {
+                userName: userName,
+                productId: productId,
+                productQuantity: quantity
+                };
+
+
+                  // 使用AJAX發送PUT請求
+                  fetch('/cart/replace/' + userName, {
+                    method: 'PUT',
+                    headers: {
+                      'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(addToCartRequestDTO)
+                  }).then(response => {
+                    if (response.ok) {
+                      // 請求成功，進行相應的處理
+                      alert("購物車更新成功！");
+                      location.reload(); // 重新載入頁面以顯示修改後的商品
+                    } else {
+                      // 請求失敗，處理錯誤
+                      alert("購物車更新失敗！");
+                    }
+                  }).catch(error => {
+                    // 請求錯誤，處理錯誤
+                    alert("購物車更新發生錯誤！");
+                  });
+                }
+
+
+            function deleteProduct(productId) {
+                console.log(userName);
+                console.log(productId);
+
+                  // 使用AJAX發送DELETE請求
+                  fetch('/cart/delete/' + userName +'/' + productId, {
+                    method: 'DELETE'
+                  }).then(response => {
+                    if (response.ok) {
+                      // 請求成功，進行相應的處理
+                      alert("購物車刪除成功！");
+                      location.reload(); // 重新載入頁面以顯示修改後的商品
+                    } else {
+                      // 請求失敗，處理錯誤
+                      alert("購物車刪除失敗！");
+                    }
+                  }).catch(error => {
+                    // 請求錯誤，處理錯誤
+                    alert("購物車刪除發生錯誤！");
+                  });
+                }
+
+            function beginCheckout() {
+                window.location.href = '/checkout/' + userName;
+            }
+
+
+</script>
+
+<h1>購物車內的商品：</h1>
+<table>
+    <thead>
+    <tr>
+        <th>商品名稱</th>
+        <th>價格</th>
+        <th>數量</th>
+        <th>操作</th>
+    </tr>
+    </thead>
+    <tbody>
+    <!-- 使用迴圈來遍歷所有商品及其相關資訊 -->
+    <tr th:each="product : ${cart.products}">
+        <td th:text="${product.productName}"></td>
+        <td th:text="${'$' + product.productPrice}"></td>
+        <td>
+            <input class="quantity-input" type="number" min="1" max="10" data-product-id="${product.id}"
+                   th:value="${cart.productQuantity[__${product.id}__]}">
+        </td>
+        <td class="action-buttons">
+            <button th:data-product-id="${product.id}" onclick="updateQuantity(this.getAttribute('data-product-id'))">
+                更新數量
+            </button>
+            <button class="delete" th:data-product-id="${product.id}" onclick="deleteProduct(this.getAttribute('data-product-id'))">刪除</button>
+        </td>
+    </tr>
+    </tbody>
+</table>
+
+<!-- 顯示總價 -->
+<h2>小計：<span class="total-price" th:text="${'$' + cart.totalPrice}"></span></h2>
+<!-- 送出訂單按鈕 -->
+<button class="submit-button" onclick="beginCheckout()">開始結帳</button>
+
+
+</body>
+</html>

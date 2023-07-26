@@ -4,13 +4,13 @@ import com.example.pesha.dao.entity.User;
 import com.example.pesha.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
 
-@RestController
-@RequestMapping(value = "user")
+@Controller
 public class UserController {
 
     @Autowired
@@ -20,30 +20,39 @@ public class UserController {
         this.userService = userService;
     }
 
-    @GetMapping("/{userId}")
+    @GetMapping("/user/{userId}")
     public User getUser(@PathVariable("userId") Long userId) {
         return userService.getUser(userId);
     }
 
-    @GetMapping("/admin/all")
+    @GetMapping("/user/admin/all")
     public List<User> getAllUser() {
         return userService.getAllUser();
     }
 
-    @PostMapping
-    public User createUser(@RequestBody User requestUser) {
-        return userService.createUser(requestUser);
-    }
 
-    @PutMapping
+    @PutMapping("/user")
     public User replaceUser(@RequestParam("userId") Long userId,
                             @RequestBody User requestUser) {
         return userService.replaceUser(userId, requestUser);
     }
 
-    @DeleteMapping
+    @DeleteMapping("/user")
     public void deleteUser(@RequestParam("userId") Long userId) {
         userService.deleteUser(userId);
+    }
+
+    @GetMapping("/register")
+    public String showRegistrationForm(Model model) {
+        model.addAttribute("user", new User());
+        return "register";
+    }
+
+    @PostMapping("/register")
+    public String createUser(@ModelAttribute User user) {
+        userService.createUser(user);
+        System.out.println(user.getAuthorities());
+        return "redirect:/login"; // 可以導向登錄頁面或其他目標頁面
     }
 
 }

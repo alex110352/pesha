@@ -29,15 +29,15 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
 
         http.authorizeHttpRequests()
-                .antMatchers("/loginpage", "/logoutsuccess", "/user/**","/product/**").permitAll()
+                .antMatchers("/loginpage", "/logoutsuccess", "/user/**","/product/**","/register","/chcekout/**").permitAll()
                 .antMatchers("/adminpage","/user/admin/all","/order/admin/all").hasAnyAuthority("admin")
                 .antMatchers("/managepage").hasRole("manage")
                 .antMatchers("/employeepage").hasAnyRole("manager", "employee")
-                .anyRequest().authenticated();
-                /*.and()
+                .anyRequest().authenticated()
+                .and()
                 .csrf().disable();
 
-                 */
+
 
 
         http.logout()

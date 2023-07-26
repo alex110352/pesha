@@ -1,6 +1,8 @@
 package com.example.pesha.service;
 
+import com.example.pesha.dao.entity.Authority;
 import com.example.pesha.dao.entity.User;
+import com.example.pesha.dao.repositories.AuthorityRepository;
 import com.example.pesha.dao.repositories.UserRepository;
 import com.example.pesha.exception.DuplicateException;
 import com.example.pesha.exception.NotFoundException;
@@ -14,11 +16,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import javax.transaction.Transactional;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 
 @Service
 public class UserService implements UserDetailsService {
@@ -26,9 +24,13 @@ public class UserService implements UserDetailsService {
     @Autowired
     private final UserRepository userRepository;
 
+    @Autowired
+    private final AuthorityRepository authorityRepository;
 
-    public UserService(UserRepository userRepository) {
+
+    public UserService(UserRepository userRepository, AuthorityRepository authorityRepository) {
         this.userRepository = userRepository;
+        this.authorityRepository = authorityRepository;
     }
 
         @Override
@@ -36,6 +38,8 @@ public class UserService implements UserDetailsService {
 
             User user = userRepository.findByUserName(username)
                     .orElseThrow(() ->new UsernameNotFoundException("can't find user"));
+
+
 
             Collection<? extends GrantedAuthority> authorities = user.getAuthorities().stream()
                     .map(authority -> new SimpleGrantedAuthority(authority.getAuthority()))
@@ -57,10 +61,21 @@ public class UserService implements UserDetailsService {
 
         PasswordEncoder pe = new BCryptPasswordEncoder();
 
+        List<Authority> authorities = new ArrayList<>();
+
+        for (Authority authority : requestUser.getAuthorities()) {
+            Authority savedAuthority = authorityRepository.findByAuthority(authority.getAuthority());
+            if (savedAuthority != null) {
+                authorities.add(savedAuthority);
+            } else {
+                authorities.add(authority);
+            }
+        }
+
         User user = new User();
         user.setUserName(requestUser.getUserName());
         user.setUserPassword(pe.encode(requestUser.getUserPassword()));
-        user.setAuthorities(requestUser.getAuthorities());
+        user.setAuthorities(authorities);
         return userRepository.save(user);
     }
 

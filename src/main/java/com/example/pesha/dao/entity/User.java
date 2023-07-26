@@ -1,16 +1,17 @@
 package com.example.pesha.dao.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
+import org.springframework.web.bind.annotation.ModelAttribute;
 
 import javax.persistence.*;
 import java.util.List;
+import java.util.Objects;
 
 @Entity
 @Table(name = "user")
-@Data
+@Getter
+@Setter
 @AllArgsConstructor
 @NoArgsConstructor
 public class User {
@@ -20,12 +21,12 @@ public class User {
     private Long id;
     private String userName;
     private String userPassword;
+    @JsonIgnore
     @OneToOne(mappedBy = "user",cascade = CascadeType.ALL,orphanRemoval = true)
     private Cart cart;
 
-    @ManyToMany(fetch = FetchType.EAGER)
+    @ManyToMany(fetch = FetchType.EAGER,cascade = CascadeType.MERGE)
     private List<Authority> authorities;
-
     @OneToMany(mappedBy = "user",cascade = CascadeType.REMOVE,orphanRemoval = true)
     private List<OrderEntity> orderEntityList;
 
@@ -34,4 +35,6 @@ public class User {
         this.userPassword = userPassword;
         this.authorities = authorities;
     }
+
+
 }

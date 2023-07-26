@@ -110,7 +110,7 @@ public class DaoTest {
         PasswordEncoder pe = new BCryptPasswordEncoder();
 
         User user = new User();
-        user.setUserName("tony");
+        user.setUserName("tonyy");
         user.setUserPassword(pe.encode("1234"));
         user.setAuthorities(authorities);
 
@@ -175,21 +175,14 @@ public class DaoTest {
     @Test
     @Commit
     @Transactional
-    public void testtt() {
+    public void createProduct() {
 
-        List<Authority> authorities = new ArrayList<>();
-        authorities.add(new Authority("admin"));
-        authorities.add(new Authority("normal"));
-        authorities.add(new Authority("ROLE_manager"));
-        PasswordEncoder pe = new BCryptPasswordEncoder();
 
-        User user = new User();
-        user.setUserName("tony");
-        user.setUserPassword(pe.encode("1234"));
-        user.setAuthorities(authorities);
-        System.out.println(user.getUserPassword());
-        userRepository.save(user);
+        Product product1 = new Product("貓罐頭", 100);
+        Product product2 = new Product("狗罐頭", 200);
+        productRepository.save(product1);
+        productRepository.save(product2);
+
 
     }
-
 }

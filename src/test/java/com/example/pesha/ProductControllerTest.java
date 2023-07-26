@@ -19,8 +19,7 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.setup.MockMvcBuilders.standaloneSetup;
@@ -107,7 +106,7 @@ public class ProductControllerTest {
     @Test
     public void testPutAPI() throws Exception {
 
-        when(this.productService.replaceProduct(anyString(), any(Product.class))).thenReturn(new Product("B01", 300));
+        when(this.productService.replaceProduct(anyLong(), any(Product.class))).thenReturn(new Product("B01", 300));
         JSONObject request = new JSONObject()
                 .put("productName", "B01")
                 .put("productPrice", 300);

@@ -1,11 +1,29 @@
 package com.example.pesha.controller;
 
+import com.example.pesha.dao.entity.Product;
+import com.example.pesha.service.ProductService;
+import com.example.pesha.service.UserService;
+import lombok.Getter;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @Controller
 public class SecurityConteoller {
+
+    @Autowired
+    private final UserService userService;
+
+    @Autowired
+    private final ProductService productService;
+
+    public SecurityConteoller(UserService userService, ProductService productService) {
+        this.userService = userService;
+        this.productService = productService;
+    }
 
     @RequestMapping("/")
     public String welcome() {
@@ -17,15 +35,14 @@ public class SecurityConteoller {
         return "loginpage";
     }
 
+
     @RequestMapping("/fail")
     @ResponseBody
     public String fail() {
         return "fail";
     }
 
-
     @RequestMapping("/logoutsuccess")
-    @ResponseBody
     public String logout() {
         return "logoutsuccess";
     }

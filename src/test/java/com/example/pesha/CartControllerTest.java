@@ -134,7 +134,7 @@ public class CartControllerTest {
         cart.calculatePrices();
 
 
-        when(this.cartService.getCartByUser(anyLong()))
+        when(this.cartService.getCartByUser(anyString()))
                 .thenReturn(cart);
 
         cartMockMvc.perform(MockMvcRequestBuilders

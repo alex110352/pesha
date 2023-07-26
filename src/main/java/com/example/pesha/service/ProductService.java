@@ -1,6 +1,10 @@
 package com.example.pesha.service;
 
+import com.example.pesha.dao.entity.Cart;
+import com.example.pesha.dao.entity.OrderItem;
 import com.example.pesha.dao.entity.Product;
+import com.example.pesha.dao.repositories.CartRepository;
+import com.example.pesha.dao.repositories.OrderItemRepository;
 import com.example.pesha.dao.repositories.ProductRepository;
 import com.example.pesha.exception.DuplicateException;
 import com.example.pesha.exception.NotFoundException;
@@ -16,8 +20,16 @@ public class ProductService {
     @Autowired
     private final ProductRepository productRepository;
 
-    public ProductService(ProductRepository productRepository) {
+    @Autowired
+    private final CartRepository cartRepository;
+
+    @Autowired
+    private final OrderItemRepository orderItemRepository;
+
+    public ProductService(ProductRepository productRepository, CartRepository cartRepository, OrderItemRepository orderItemRepository) {
         this.productRepository = productRepository;
+        this.cartRepository = cartRepository;
+        this.orderItemRepository = orderItemRepository;
     }
 
     public Product getProduct(Long productId) {
@@ -27,9 +39,7 @@ public class ProductService {
 
     public List<Product> getAllProduct() {
         List<Product> listProduct = productRepository.findAll();
-        if (listProduct.isEmpty()) {
-            throw new NotFoundException("product list is empty");
-        }
+
         return listProduct;
     }
 
@@ -48,16 +58,15 @@ public class ProductService {
         return productRepository.save(product);
     }
 
-    public Product replaceProduct(String replaceProductName, Product productRequest) {
+    public Product replaceProduct(Long productId, Product productRequest) {
 
-        Optional<Product> OptionalReplaceProduct = productRepository.findByProductName(replaceProductName);
-        OptionalReplaceProduct.orElseThrow(() -> new NotFoundException("can't find " + replaceProductName));
+        Product replaceProduct = productRepository.findById(productId)
+                .orElseThrow(() -> new NotFoundException("can't find product"));
 
-        Product replaceProduct = OptionalReplaceProduct.get();
         String productName = productRequest.getProductName();
         int productPrice = productRequest.getProductPrice();
 
-        if (replaceProduct.getProductPrice() == productPrice && Objects.equals(replaceProductName, productName)) {
+        if (replaceProduct.getProductPrice() == productPrice && Objects.equals(replaceProduct.getProductName(), productName)) {
             throw new DuplicateException("replace information is duplicate");
         }
 
@@ -69,7 +78,23 @@ public class ProductService {
     public void deleteProduct(Long productId) {
         Product product = productRepository.findById(productId)
                 .orElseThrow(() -> new NotFoundException("can't find " + productId));
+
+        List<Cart> carts = cartRepository.findByProductsContaining(product);
+        List<OrderItem> orderItems = orderItemRepository.findByProduct(product);
+
+
+        for (Cart cart:carts) {
+            cart.getProductQuantity().remove(product);
+        }
+
+        for (Cart cart:carts) {
+            cart.getProducts().remove(product);
+            cartRepository.save(cart);
+        }
+
+        orderItemRepository.deleteAll(orderItems);
         productRepository.delete(product);
+
     }
 
 }

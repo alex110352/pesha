@@ -1,16 +1,15 @@
 package com.example.pesha.dao.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import javax.persistence.*;
 import java.util.List;
 
 @Entity
 @Table(name = "order_entity")
-@Data
+@Getter
+@Setter
 @AllArgsConstructor
 @NoArgsConstructor
 public class OrderEntity {
@@ -26,6 +25,7 @@ public class OrderEntity {
     @JsonIgnore
     private User user;
     private String shippingAddress;
+    private String paymentMethod;
     private double discount;
 
     private double totalPrice;

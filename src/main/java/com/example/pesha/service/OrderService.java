@@ -35,9 +35,9 @@ public class OrderService {
         return order;
     }
 
-    public List<OrderEntity> getOrderByUser(Long userId) {
+    public List<OrderEntity> getOrderByUser(String userName) {
 
-        User user = userRepository.findById(userId)
+        User user = userRepository.findByUserName(userName)
                 .orElseThrow(() -> new NotFoundException("can't find user"));
 
         return orderRepository.findAllByUser(user)

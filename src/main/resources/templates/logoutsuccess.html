@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>Logout Success</title>
+  <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f5f5f5;
+            padding: 20px;
+        }
+
+        .message {
+            text-align: center;
+            font-size: 24px;
+            margin-top: 100px;
+        }
+
+        .redirect-info {
+            text-align: center;
+            font-size: 18px;
+            margin-top: 20px;
+        }
+
+        .countdown {
+            font-size: 18px;
+            text-align: center;
+            margin-top: 20px;
+        }
+    </style>
+  <script>
+        // Function to handle the countdown timer
+        function countdownRedirect() {
+            let seconds = 1;
+            const countdownElement = document.getElementById("countdown");
+
+            const timer = setInterval(function () {
+                countdownElement.textContent = seconds;
+                seconds--;
+
+                if (seconds < 0) {
+                    clearInterval(timer);
+                    window.location.href = "/login";
+                }
+            }, 1000);
+        }
+
+        // Start the countdown when the page loads
+        window.onload = function () {
+            countdownRedirect();
+        };
+    </script>
+</head>
+<body>
+<div class="message">Logout Successful!</div>
+<div class="redirect-info">Redirecting to login page in <span id="countdown">2</span> seconds...</div>
+</body>
+</html>
