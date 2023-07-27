@@ -51,18 +51,16 @@ public class CheckoutService {
         order.setFinalPrice(finalPrice);
         orderService.createOrder(order);
 
-        order.setOrderItems(convertCartToOrderItems(order,cart));
-
+        order.setOrderItems(convertCartToOrderItems(order, cart));
 
         return orderService.createOrder(order);
 
     }
 
-    private List<OrderItem> convertCartToOrderItems(OrderEntity order,Cart cart) {
+    private List<OrderItem> convertCartToOrderItems(OrderEntity order, Cart cart) {
 
         List<OrderItem> orderItems = new ArrayList<>();
         Map<Product, Integer> productQuantity = cart.getProductQuantity();
-
 
         for (Product product : cart.getProducts()) {
             int quantity = productQuantity.getOrDefault(product, 0);

@@ -16,7 +16,9 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
 
 @Service
 public class UserService implements UserDetailsService {
@@ -33,24 +35,23 @@ public class UserService implements UserDetailsService {
         this.authorityRepository = authorityRepository;
     }
 
-        @Override
-        public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+    @Override
+    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
 
-            User user = userRepository.findByUserName(username)
-                    .orElseThrow(() ->new UsernameNotFoundException("can't find user"));
+        User user = userRepository.findByUserName(username)
+                .orElseThrow(() -> new UsernameNotFoundException("can't find user"));
 
 
+        Collection<? extends GrantedAuthority> authorities = user.getAuthorities().stream()
+                .map(authority -> new SimpleGrantedAuthority(authority.getAuthority()))
+                .toList();
 
-            Collection<? extends GrantedAuthority> authorities = user.getAuthorities().stream()
-                    .map(authority -> new SimpleGrantedAuthority(authority.getAuthority()))
-                    .toList();
+        return new org.springframework.security.core.userdetails.User(
+                username,
+                user.getUserPassword(),
+                authorities);
 
-            return new org.springframework.security.core.userdetails.User(
-                    username,
-                    user.getUserPassword(),
-                    authorities);
-
-        }
+    }
 
     public User createUser(User requestUser) {
 

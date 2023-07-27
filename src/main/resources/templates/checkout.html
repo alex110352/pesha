@@ -77,6 +77,9 @@
         .subtotal, .total {
             font-weight: bold;
         }
+
+
+
     </style>
 </head>
 <body th:object="${cart}">
@@ -153,9 +156,7 @@
     var totalPrice = cart.totalPrice;
     var discountAmount = 0;
 
-    // 在一開始計算並設定 finalPrice
     var discountCode = document.getElementById('discountCode').value;
-    // 在這裡根據折扣碼計算折扣金額（這裡使用了一個簡單的假設）
     if (discountCode === 'DISCOUNT10') {
         discountAmount = cart.totalPrice * 0.1;
     } else {
@@ -168,7 +169,6 @@
         var shippingAddress = document.getElementById('shippingAddress').value;
         var paymentMethod = document.getElementById('paymentMethod').value;
 
-        // 創建JSON對象
         var orderRequestDTO = {
             userName: userName,
             shippingAddress: shippingAddress,
@@ -179,10 +179,9 @@
 
         if (!shippingAddress) {
             alert('請輸入運送地址！');
-            return; // 阻止請求的發送
+            return;
         }
 
-        // 使用AJAX fetch發送POST請求
         fetch('/checkout', {
             method: 'POST',
             headers: {
@@ -191,15 +190,13 @@
             body: JSON.stringify(orderRequestDTO)
         }).then(response => {
             if (response.ok) {
-                // 請求成功，進行相應的處理
                 alert('感謝您的訂單，我們將盡快處理！');
-                window.location.href = '/order'; // 導向/order頁面
+                window.location.href = '/order';
             } else {
                 alert('感謝您的訂單，我們將盡快處理！');
                 window.location.href = '/order/' + userName;
             }
         }).catch(error => {
-            // 請求錯誤，處理錯誤
             alert('訂單提交發生錯誤！');
         });
     }
@@ -211,7 +208,6 @@
     function updateDiscount() {
         var discountCode = document.getElementById('discountCode').value;
 
-        // 在這裡根據折扣碼計算折扣金額（這裡使用了一個簡單的假設）
         if (discountCode === 'DISCOUNT10') {
             discountAmount = cart.totalPrice * 0.1;
         } else {
@@ -237,6 +233,9 @@
         var finalPriceElement = document.getElementById('finalPrice');
         finalPriceElement.innerText = '$' + finalPrice;
     });
+
+
+
 
 </script>
 </body>

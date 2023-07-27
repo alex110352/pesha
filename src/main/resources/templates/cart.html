@@ -75,7 +75,6 @@
 
 
 
-
     </style>
 </head>
 <body>
@@ -92,7 +91,7 @@
                 if (quantity < 1 || quantity > 10) {
                     alert('數量必須在1到10之間！');
                     location.reload();
-                    return; // 阻止請求的發送
+                    return;
                 }
 
                 var addToCartRequestDTO = {
@@ -102,7 +101,6 @@
                 };
 
 
-                  // 使用AJAX發送PUT請求
                   fetch('/cart/replace/' + userName, {
                     method: 'PUT',
                     headers: {
@@ -111,38 +109,29 @@
                     body: JSON.stringify(addToCartRequestDTO)
                   }).then(response => {
                     if (response.ok) {
-                      // 請求成功，進行相應的處理
                       alert("購物車更新成功！");
-                      location.reload(); // 重新載入頁面以顯示修改後的商品
+                      location.reload();
                     } else {
-                      // 請求失敗，處理錯誤
                       alert("購物車更新失敗！");
                     }
                   }).catch(error => {
-                    // 請求錯誤，處理錯誤
                     alert("購物車更新發生錯誤！");
                   });
                 }
 
 
             function deleteProduct(productId) {
-                console.log(userName);
-                console.log(productId);
 
-                  // 使用AJAX發送DELETE請求
                   fetch('/cart/delete/' + userName +'/' + productId, {
                     method: 'DELETE'
                   }).then(response => {
                     if (response.ok) {
-                      // 請求成功，進行相應的處理
                       alert("購物車刪除成功！");
-                      location.reload(); // 重新載入頁面以顯示修改後的商品
+                      location.reload();
                     } else {
-                      // 請求失敗，處理錯誤
                       alert("購物車刪除失敗！");
                     }
                   }).catch(error => {
-                    // 請求錯誤，處理錯誤
                     alert("購物車刪除發生錯誤！");
                   });
                 }
@@ -150,6 +139,9 @@
             function beginCheckout() {
                 window.location.href = '/checkout/' + userName;
             }
+
+
+
 
 
 </script>
@@ -177,7 +169,9 @@
             <button th:data-product-id="${product.id}" onclick="updateQuantity(this.getAttribute('data-product-id'))">
                 更新數量
             </button>
-            <button class="delete" th:data-product-id="${product.id}" onclick="deleteProduct(this.getAttribute('data-product-id'))">刪除</button>
+            <button class="delete" th:data-product-id="${product.id}"
+                    onclick="deleteProduct(this.getAttribute('data-product-id'))">刪除
+            </button>
         </td>
     </tr>
     </tbody>

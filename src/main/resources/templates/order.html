@@ -1,11 +1,11 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
-  <title>訂單頁面</title>
-  <!-- Add Bootstrap CSS -->
-  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
-  <style>
-    /* Custom styles for e-commerce style */
+    <title>訂單頁面</title>
+    <!-- Add Bootstrap CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <style>
+
     body {
       background-color: #f8f8f8;
       font-family: Arial, sans-serif;
@@ -75,42 +75,45 @@
     .discount {
       color: #dc3545;
     }
-  </style>
+
+
+
+    </style>
 </head>
 <body>
 <div class="container">
-  <h1 class="page-heading mt-5 mb-4">歡迎來到您的訂單頁面，<span th:text="${userName}"></span>！</h1>
+    <h1 class="page-heading mt-5 mb-4">歡迎來到您的訂單頁面，<span th:text="${userName}"></span>！</h1>
 
-  <!-- 使用Thymeleaf迴圈顯示每個訂單的資訊 -->
-  <div th:each="order : ${orderList}" class="order-details">
-    <h2 class="mb-3">訂單編號：<span class="order-id" th:text="${order.id}"></span></h2>
-    <p class="mb-1 shipping-address">運送地址：<span th:text="${order.shippingAddress}"></span></p>
-    <p class="mb-1">付款方式：<span th:text="${order.paymentMethod}"></span></p>
-    <p class="mb-1 price-label">小計：<span class="price-value" th:text="${'$' + order.totalPrice}"></span></p>
-    <p class="mb-1 discount">折扣：<span class="price-value" th:text="${'$' + order.discount}"></span></p>
-    <p class="mb-3 price-label">總金額：<span class="price-value" th:text="${'$' + order.finalPrice}"></span></p>
+    <!-- 使用Thymeleaf迴圈顯示每個訂單的資訊 -->
+    <div th:each="order : ${orderList}" class="order-details">
+        <h2 class="mb-3">訂單編號：<span class="order-id" th:text="${order.id}"></span></h2>
+        <p class="mb-1 shipping-address">運送地址：<span th:text="${order.shippingAddress}"></span></p>
+        <p class="mb-1">付款方式：<span th:text="${order.paymentMethod}"></span></p>
+        <p class="mb-1 price-label">小計：<span class="price-value" th:text="${'$' + order.totalPrice}"></span></p>
+        <p class="mb-1 discount">折扣：<span class="price-value" th:text="${'$' + order.discount}"></span></p>
+        <p class="mb-3 price-label">總金額：<span class="price-value" th:text="${'$' + order.finalPrice}"></span></p>
 
-    <div class="order-item-details">
-      <h3 class="mb-3">訂單商品：</h3>
-      <table class="table">
-        <thead>
-        <tr>
-          <th>商品名稱</th>
-          <th>價格</th>
-          <th>數量</th>
-        </tr>
-        </thead>
-        <tbody>
-        <!-- 使用Thymeleaf迴圈顯示每個訂單商品的資訊 -->
-        <tr th:each="orderItem : ${order.orderItems}">
-          <td th:text="${orderItem.product.productName}"></td>
-          <td class="price-value" th:text="${'$' + orderItem.product.productPrice}"></td>
-          <td th:text="${orderItem.quantity}"></td>
-        </tr>
-        </tbody>
-      </table>
+        <div class="order-item-details">
+            <h3 class="mb-3">訂單商品：</h3>
+            <table class="table">
+                <thead>
+                <tr>
+                    <th>商品名稱</th>
+                    <th>價格</th>
+                    <th>數量</th>
+                </tr>
+                </thead>
+                <tbody>
+                <!-- 使用Thymeleaf迴圈顯示每個訂單商品的資訊 -->
+                <tr th:each="orderItem : ${order.orderItems}">
+                    <td th:text="${orderItem.product.productName}"></td>
+                    <td class="price-value" th:text="${'$' + orderItem.product.productPrice}"></td>
+                    <td th:text="${orderItem.quantity}"></td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
     </div>
-  </div>
 </div>
 
 <!-- Add Bootstrap JS and jQuery (if needed) -->

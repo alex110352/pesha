@@ -51,8 +51,28 @@ public class UserController {
     @PostMapping("/register")
     public String createUser(@ModelAttribute User user) {
         userService.createUser(user);
-        System.out.println(user.getAuthorities());
         return "redirect:/login"; // 可以導向登錄頁面或其他目標頁面
+    }
+
+    @RequestMapping("/")
+    public String welcome() {
+        return "welcome";
+    }
+
+    @RequestMapping("/loginpage")
+    public String loginpage() {
+        return "loginpage";
+    }
+
+
+    @RequestMapping("/fail")
+    public String fail() {
+        return "fail";
+    }
+
+    @RequestMapping("/logoutsuccess")
+    public String logout() {
+        return "logoutsuccess";
     }
 
 }

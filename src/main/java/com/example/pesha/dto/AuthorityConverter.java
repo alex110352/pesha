@@ -6,10 +6,8 @@ import org.springframework.stereotype.Component;
 
 @Component
 public class AuthorityConverter implements Converter<String, Authority> {
-
     @Override
-    public Authority convert(String authorityString){
+    public Authority convert(String authorityString) {
         return new Authority(authorityString);
     }
-
 }

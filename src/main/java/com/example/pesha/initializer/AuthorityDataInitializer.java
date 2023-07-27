@@ -18,10 +18,10 @@ public class AuthorityDataInitializer implements CommandLineRunner {
 
     @Override
     public void run(String... args) {
-        createAuthorityIfNotExists( "admin");
-        createAuthorityIfNotExists( "normal");
-        createAuthorityIfNotExists( "ROLE_manager");
-        createAuthorityIfNotExists( "ROLE_employee");
+        createAuthorityIfNotExists("admin");
+        createAuthorityIfNotExists("normal");
+        createAuthorityIfNotExists("ROLE_manager");
+        createAuthorityIfNotExists("ROLE_employee");
     }
 
     private void createAuthorityIfNotExists(String authorityName) {

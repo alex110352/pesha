@@ -1,11 +1,7 @@
 package com.example.pesha.controller;
 
-import com.example.pesha.dao.entity.Cart;
 import com.example.pesha.dao.entity.OrderEntity;
 import com.example.pesha.service.OrderService;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -19,13 +15,14 @@ public class OrderController {
 
     @Autowired
     private OrderService orderService;
+
     @GetMapping("/{userName}/{orderId}")
-    public OrderEntity getOrder(@PathVariable("orderId")Long orderId){
+    public OrderEntity getOrder(@PathVariable("orderId") Long orderId) {
         return orderService.getOrder(orderId);
     }
 
     @GetMapping("/{userName}")
-    public String getOrderByUser(@PathVariable("userName")String userName, Model model){
+    public String getOrderByUser(@PathVariable("userName") String userName, Model model) {
         List<OrderEntity> orderList = orderService.getOrderByUser(userName);
         model.addAttribute("orderList", orderList);
         model.addAttribute("userName", userName);
@@ -33,12 +30,12 @@ public class OrderController {
     }
 
     @GetMapping("/admin/all")
-    public List<OrderEntity> getAllOrder(){
+    public List<OrderEntity> getAllOrder() {
         return orderService.getAllOrder();
     }
 
     @DeleteMapping
-    public void deleteOrder(@RequestParam("orderId")Long orderId){
+    public void deleteOrder(@RequestParam("orderId") Long orderId) {
         orderService.deleteOrder(orderId);
     }
 }

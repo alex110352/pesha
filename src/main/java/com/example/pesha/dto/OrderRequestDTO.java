@@ -15,5 +15,4 @@ public class OrderRequestDTO {
     private String paymentMethod;
     private Double discount;
     private int totalPrice;
-
 }

@@ -1,7 +1,10 @@
 package com.example.pesha.dao.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import javax.persistence.*;
 import java.util.HashMap;
@@ -42,16 +45,6 @@ public class Cart {
     @Column(name = "total_price")
     private int totalPrice;
 
-    /*public Map<Product, Integer> getProductQuantity() {
-        Map<Product, Integer> productQuantity = new HashMap<>();
-        for (Product product : products) {
-            int quantity = this.productQuantity.getOrDefault(product, 0);
-            productQuantity.put(product, quantity);
-        }
-        return productQuantity;
-    }
-
-     */
 
     public void calculatePrices() {
 

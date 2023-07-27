@@ -54,6 +54,10 @@
             background-color: #45a049;
         }
 
+
+
+
+
     </style>
     <script th:inline="javascript">
 
@@ -64,13 +68,12 @@
         var productPrice = window.prompt("請輸入商品價格:");
 
         if (productName && productPrice) {
-          // 創建JSON對象
+
           var productData = {
             productName: productName,
             productPrice: productPrice
           };
 
-          // 使用AJAX發送POST請求
           fetch('/product/add', {
             method: 'POST',
             headers: {
@@ -79,15 +82,12 @@
             body: JSON.stringify(productData)
           }).then(response => {
             if (response.ok) {
-              // 請求成功，進行相應的處理
               alert("商品新增成功！");
-              location.reload(); // 重新載入頁面以顯示新增的商品
+              location.reload();
             } else {
-              // 請求失敗，處理錯誤
               alert("商品新增失敗！");
             }
           }).catch(error => {
-            // 請求錯誤，處理錯誤
             alert("商品新增發生錯誤！");
           });
         }
@@ -100,13 +100,13 @@
         var productPrice = window.prompt("請輸入修改後的商品價格:");
 
         if (productName && productPrice) {
-          // 創建JSON對象
+
           var productData = {
             productName: productName,
             productPrice: productPrice
           };
 
-          // 使用AJAX發送PUT請求
+
           fetch('/product/replace/' + productId, {
             method: 'PUT',
             headers: {
@@ -115,15 +115,12 @@
             body: JSON.stringify(productData)
           }).then(response => {
             if (response.ok) {
-              // 請求成功，進行相應的處理
               alert("商品修改成功！");
-              location.reload(); // 重新載入頁面以顯示修改後的商品
+              location.reload();
             } else {
-              // 請求失敗，處理錯誤
               alert("商品修改失敗！");
             }
           }).catch(error => {
-            // 請求錯誤，處理錯誤
             alert("商品修改發生錯誤！");
           });
         }
@@ -137,7 +134,6 @@
             productQuantity : 1
           };
 
-          // 使用AJAX發送POST請求
           fetch('/cart/add/', {
             method: 'POST',
             headers: {
@@ -146,15 +142,12 @@
             body: JSON.stringify(addToCartRequestDTO)
           }).then(response => {
             if (response.ok) {
-              // 請求成功，進行相應的處理
               alert("購物車新增成功！");
-              location.reload(); // 重新載入頁面以顯示修改後的商品
+              location.reload();
             } else {
-              // 請求失敗，處理錯誤
               alert("購物車新增失敗！");
             }
           }).catch(error => {
-            // 請求錯誤，處理錯誤
             alert("購物車新增發生錯誤！");
           });
         }
@@ -166,6 +159,8 @@
               alert("請先登入以查看購物車！");
             }
           }
+
+
 
 
     </script>
@@ -191,11 +186,15 @@
         <div th:each="product : ${products}" class="product-card">
             <div class="product-name" th:text="${product.productName}"></div>
             <div class="product-price" th:text="${'$' + product.productPrice}"></div>
-            <button class="add-to-cart" th:text="加入購物車" th:data-product-id="${product.id}" onclick="addToCart(this.getAttribute('data-product-id'))">加入購物車</button>
+            <button class="add-to-cart" th:text="加入購物車" th:data-product-id="${product.id}"
+                    onclick="addToCart(this.getAttribute('data-product-id'))">加入購物車
+            </button>
 
             <!-- 只有admin權限的用戶才能看到以下按鈕 -->
             <div sec:authorize="hasAuthority('admin')" class="d-flex justify-content-between">
-                <button type="button" class="btn btn-warning me-2" th:data-product-id="${product.id}" onclick="editProduct(this.getAttribute('data-product-id'))">編輯</button>
+                <button type="button" class="btn btn-warning me-2" th:data-product-id="${product.id}"
+                        onclick="editProduct(this.getAttribute('data-product-id'))">編輯
+                </button>
                 <form th:action="@{/product/delete/{id}(id=${product.id})}" method="post">
                     <input type="hidden" name="_method" value="DELETE"/>
                     <button type="submit" class="btn btn-danger">刪除</button>

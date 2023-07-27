@@ -38,9 +38,7 @@ public class ProductService {
     }
 
     public List<Product> getAllProduct() {
-        List<Product> listProduct = productRepository.findAll();
-
-        return listProduct;
+        return productRepository.findAll();
     }
 
     public Product createProduct(Product productRequest) {
@@ -83,11 +81,11 @@ public class ProductService {
         List<OrderItem> orderItems = orderItemRepository.findByProduct(product);
 
 
-        for (Cart cart:carts) {
+        for (Cart cart : carts) {
             cart.getProductQuantity().remove(product);
         }
 
-        for (Cart cart:carts) {
+        for (Cart cart : carts) {
             cart.getProducts().remove(product);
             cartRepository.save(cart);
         }

@@ -1,7 +1,10 @@
 package com.example.pesha.dao.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import javax.persistence.*;
 import java.util.List;
@@ -27,7 +30,6 @@ public class OrderEntity {
     private String shippingAddress;
     private String paymentMethod;
     private double discount;
-
     private double totalPrice;
     private double finalPrice;
 

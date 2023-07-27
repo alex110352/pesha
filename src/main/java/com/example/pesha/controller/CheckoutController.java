@@ -23,7 +23,6 @@ public class CheckoutController {
     private final CartService cartService;
 
 
-
     public CheckoutController(CheckoutService checkoutService, CartService cartService, OrderRequestDTO orderRequestDTO) {
         this.checkoutService = checkoutService;
         this.cartService = cartService;
@@ -36,7 +35,6 @@ public class CheckoutController {
 
     @GetMapping("/checkout/{userName}")
     public String getCheckoutByUser(@PathVariable("userName") String userName, Model model) {
-
         Cart cart = cartService.getCartByUser(userName);
         model.addAttribute("cart", cart);
         model.addAttribute("userName", userName);

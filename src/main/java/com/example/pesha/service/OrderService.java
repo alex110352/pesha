@@ -24,15 +24,14 @@ public class OrderService {
         this.userRepository = userRepository;
     }
 
-    public OrderEntity createOrder(OrderEntity order){
+    public OrderEntity createOrder(OrderEntity order) {
         return orderRepository.save(order);
     }
 
     public OrderEntity getOrder(Long orderId) {
 
-        OrderEntity order = orderRepository.findById(orderId)
+        return orderRepository.findById(orderId)
                 .orElseThrow(() -> new NotFoundException("can't find order"));
-        return order;
     }
 
     public List<OrderEntity> getOrderByUser(String userName) {
@@ -53,7 +52,7 @@ public class OrderService {
     public List<OrderEntity> getAllOrder() {
         List<OrderEntity> orderList = orderRepository.findAll();
         if (orderList.isEmpty()) {
-            throw  new NotFoundException("can't find order");
+            throw new NotFoundException("can't find order");
         }
         return orderList;
     }

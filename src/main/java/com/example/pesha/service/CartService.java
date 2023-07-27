@@ -35,8 +35,7 @@ public class CartService {
 
     public Cart createCart(CartRequestDTO cartRequestDTO) {
 
-        User user = userRepository.findById(cartRequestDTO.getUserId())
-                .orElseThrow(() -> new NotFoundException("user not found"));
+        User user = userRepository.findById(cartRequestDTO.getUserId()).orElseThrow(() -> new NotFoundException("user not found"));
 
         List<Product> productList = productRepository.findAllById(cartRequestDTO.getProductIds());
 
@@ -50,13 +49,11 @@ public class CartService {
 
     public Cart addToCart(AddToCartRequestDTO addToCartRequestDTO) {
 
-        User user = userRepository.findByUserName(addToCartRequestDTO.getUserName())
-                .orElseThrow(() -> new NotFoundException("user not found"));
+        User user = userRepository.findByUserName(addToCartRequestDTO.getUserName()).orElseThrow(() -> new NotFoundException("user not found"));
 
         Cart cart = cartRepository.findByUser(user);
 
-        Product product = productRepository.findById(addToCartRequestDTO.getProductId())
-                .orElseThrow(() -> new NotFoundException("product not found"));
+        Product product = productRepository.findById(addToCartRequestDTO.getProductId()).orElseThrow(() -> new NotFoundException("product not found"));
 
         List<Product> productList;
         Map<Product, Integer> productQuantity;
@@ -77,7 +74,7 @@ public class CartService {
         productQuantity.put(product, quantity);
         cart.setProductQuantity(productQuantity);
 
-        if (!productList.contains(product)){
+        if (!productList.contains(product)) {
             productList.add(product);
         }
         cart.setProducts(productList);
@@ -92,7 +89,6 @@ public class CartService {
     public Cart getCartByUser(String userName) {
         User user = userRepository.findByUserName(userName)
                 .orElseThrow(() -> new NotFoundException("not found user"));
-
         Cart cart = cartRepository.findByUser(user);
         cart.calculatePrices();
 
@@ -102,8 +98,7 @@ public class CartService {
 
     public Cart replaceCart(CartRequestDTO cartRequestDTO) {
 
-        User user = userRepository.findById(cartRequestDTO.getUserId())
-                .orElseThrow(() -> new NotFoundException("not found user"));
+        User user = userRepository.findById(cartRequestDTO.getUserId()).orElseThrow(() -> new NotFoundException("not found user"));
 
         Cart cart = cartRepository.findByUser(user);
 
@@ -116,8 +111,7 @@ public class CartService {
 
     public void deleteCartByUser(Long userId) {
 
-        User user = userRepository.findById(userId)
-                .orElseThrow(() -> new NotFoundException("not found user"));
+        User user = userRepository.findById(userId).orElseThrow(() -> new NotFoundException("not found user"));
 
         Cart cart = cartRepository.findByUser(user);
         cartRepository.delete(cart);
@@ -125,16 +119,14 @@ public class CartService {
     }
 
     public Cart updateCartQuantity(AddToCartRequestDTO addToCartRequestDTO) {
-        User user = userRepository.findByUserName(addToCartRequestDTO.getUserName())
-                .orElseThrow(() -> new NotFoundException("user not found"));
+        User user = userRepository.findByUserName(addToCartRequestDTO.getUserName()).orElseThrow(() -> new NotFoundException("user not found"));
 
-        Product product = productRepository.findById(addToCartRequestDTO.getProductId())
-                .orElseThrow(() -> new NotFoundException("product not found"));
+        Product product = productRepository.findById(addToCartRequestDTO.getProductId()).orElseThrow(() -> new NotFoundException("product not found"));
 
         Cart cart = cartRepository.findByUser(user);
 
         Map<Product, Integer> productQuantity = cart.getProductQuantity();
-        int replaceQuantity =  addToCartRequestDTO.getProductQuantity();
+        int replaceQuantity = addToCartRequestDTO.getProductQuantity();
         productQuantity.put(product, replaceQuantity);
         cart.setProductQuantity(productQuantity);
         cart.calculatePrices();
@@ -142,15 +134,13 @@ public class CartService {
     }
 
 
-    public Cart deleteCartByProduct(String userName,Long productId) {
+    public Cart deleteCartByProduct(String userName, Long productId) {
 
-        User user = userRepository.findByUserName(userName)
-                .orElseThrow(() -> new NotFoundException("user not found"));
+        User user = userRepository.findByUserName(userName).orElseThrow(() -> new NotFoundException("user not found"));
 
         Cart cart = cartRepository.findByUser(user);
 
-        Product product = productRepository.findById(productId)
-                .orElseThrow(() -> new NotFoundException("product not found"));
+        Product product = productRepository.findById(productId).orElseThrow(() -> new NotFoundException("product not found"));
 
         List<Product> productList = cart.getProducts();
         Map<Product, Integer> productQuantity = cart.getProductQuantity();
