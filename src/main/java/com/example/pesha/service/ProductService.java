@@ -10,10 +10,16 @@ import com.example.pesha.exception.DuplicateException;
 import com.example.pesha.exception.NotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.UUID;
 
 @Service
 public class ProductService {
@@ -53,7 +59,9 @@ public class ProductService {
         Product product = new Product();
         product.setProductName(productName);
         product.setProductPrice(productPrice);
+
         return productRepository.save(product);
+
     }
 
     public Product replaceProduct(Long productId, Product productRequest) {
@@ -73,7 +81,7 @@ public class ProductService {
         return productRepository.save(replaceProduct);
     }
 
-    public void deleteProduct(Long productId) {
+    public Product deleteProduct(Long productId) {
         Product product = productRepository.findById(productId)
                 .orElseThrow(() -> new NotFoundException("can't find " + productId));
 
@@ -92,6 +100,8 @@ public class ProductService {
 
         orderItemRepository.deleteAll(orderItems);
         productRepository.delete(product);
+
+        return product;
 
     }
 

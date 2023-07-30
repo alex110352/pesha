@@ -22,6 +22,7 @@ public class Product {
     private Long id;
     private String productName;
     private int productPrice;
+
     @ManyToMany(mappedBy = "products")
     @JsonIgnore
     private List<Cart> carts;

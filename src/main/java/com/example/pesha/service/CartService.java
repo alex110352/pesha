@@ -33,20 +33,6 @@ public class CartService {
         this.productRepository = productRepository;
     }
 
-    public Cart createCart(CartRequestDTO cartRequestDTO) {
-
-        User user = userRepository.findById(cartRequestDTO.getUserId()).orElseThrow(() -> new NotFoundException("user not found"));
-
-        List<Product> productList = productRepository.findAllById(cartRequestDTO.getProductIds());
-
-        Cart cart = new Cart();
-        cart.setUser(user);
-        cart.setProducts(productList);
-        cart.setProductQuantity(cartRequestDTO.getProductQuantity());
-        cart.calculatePrices();
-        return cartRepository.save(cart);
-    }
-
     public Cart addToCart(AddToCartRequestDTO addToCartRequestDTO) {
 
         User user = userRepository.findByUserName(addToCartRequestDTO.getUserName()).orElseThrow(() -> new NotFoundException("user not found"));
@@ -96,27 +82,6 @@ public class CartService {
     }
 
 
-    public Cart replaceCart(CartRequestDTO cartRequestDTO) {
-
-        User user = userRepository.findById(cartRequestDTO.getUserId()).orElseThrow(() -> new NotFoundException("not found user"));
-
-        Cart cart = cartRepository.findByUser(user);
-
-        List<Product> productList = productRepository.findAllById(cartRequestDTO.getProductIds());
-        cart.setProducts(productList);
-        cart.setProductQuantity(cartRequestDTO.getProductQuantity());
-        cart.calculatePrices();
-        return cartRepository.save(cart);
-    }
-
-    public void deleteCartByUser(Long userId) {
-
-        User user = userRepository.findById(userId).orElseThrow(() -> new NotFoundException("not found user"));
-
-        Cart cart = cartRepository.findByUser(user);
-        cartRepository.delete(cart);
-
-    }
 
     public Cart updateCartQuantity(AddToCartRequestDTO addToCartRequestDTO) {
         User user = userRepository.findByUserName(addToCartRequestDTO.getUserName()).orElseThrow(() -> new NotFoundException("user not found"));

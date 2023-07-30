@@ -1,6 +1,7 @@
 package com.example.pesha.controller;
 
 import com.example.pesha.dao.entity.OrderEntity;
+import com.example.pesha.exception.NotFoundException;
 import com.example.pesha.service.OrderService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -23,10 +24,19 @@ public class OrderController {
 
     @GetMapping("/{userName}")
     public String getOrderByUser(@PathVariable("userName") String userName, Model model) {
-        List<OrderEntity> orderList = orderService.getOrderByUser(userName);
-        model.addAttribute("orderList", orderList);
-        model.addAttribute("userName", userName);
-        return "order";
+        try {
+            List<OrderEntity> orderList = orderService.getOrderByUser(userName);
+            model.addAttribute("orderList", orderList);
+            model.addAttribute("userName", userName);
+            return "order";
+        } catch (NotFoundException e) {
+            model.addAttribute("errorMessage", "product not found");
+            return null;
+        } catch (Exception e) {
+            model.addAttribute("errorMessage", e);
+            return null;
+        }
+
     }
 
     @GetMapping("/admin/all")

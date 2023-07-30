@@ -1,6 +1,8 @@
 package com.example.pesha.controller;
 
+import com.example.pesha.dao.entity.Cart;
 import com.example.pesha.dao.entity.User;
+import com.example.pesha.exception.DuplicateException;
 import com.example.pesha.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -49,9 +51,20 @@ public class UserController {
     }
 
     @PostMapping("/register")
-    public String createUser(@ModelAttribute User user) {
-        userService.createUser(user);
-        return "redirect:/login"; // 可以導向登錄頁面或其他目標頁面
+    public String createUser(@ModelAttribute User userRequest,Model model) {
+        try {
+            User user = userService.createUser(userRequest);
+            model.addAttribute("user",user);
+            model.addAttribute("userRequest",userRequest);
+            return "redirect:/login";
+        } catch (DuplicateException e) {
+            model.addAttribute("errorMessage", "user is duplicate");
+            return null;
+        } catch (Exception e) {
+            model.addAttribute("errorMessage", e);
+            return null;
+        }
+
     }
 
     @RequestMapping("/")
